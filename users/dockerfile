@@ -1,0 +1,18 @@
+FROM python:alpine3.19
+
+RUN mkdir -p /app
+
+RUN apk add curl
+RUN apk add bash
+# Install Poetry
+RUN pip install poetry
+
+# Copy poetry.lock* in case it doesn't exist in the repo
+COPY ./pyproject.toml ./poetry.lock* /app/
+
+WORKDIR /app/
+
+RUN mkdir -p /source
+
+RUN poetry install --no-root
+
