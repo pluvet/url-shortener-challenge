@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from source.domain.user import User
-from source.infraestructure.database.postgres import db
-from source.infraestructure.database import models
+from source.infraestructure.postgres import db
+from source.infraestructure import models
 from sqlalchemy import exc
 
 @dataclass

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr
 import jwt
 from hashlib import sha256
-from source.infraestructure.jwt.config import secret
+from source.infraestructure.jwt import secret
 
 class User(BaseModel):
     id: int | None = None
@@ -14,5 +14,5 @@ class User(BaseModel):
         
     def login(self, password: str) -> jwt:
         if self.password != sha256(password.encode()).hexdigest():
-            return False
+            return None
         return jwt.encode({"user_id": self.id}, secret, algorithm="HS256")

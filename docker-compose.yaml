@@ -5,8 +5,8 @@ services:
   user-app:
     build: ./users
     ports:
-      - 8600:80
-    command: ["poetry", "run", "uvicorn", "source.infraestructure.framework.app:app", "--host", "0.0.0.0", "--port", "80"]
+      - 8620:80
+    command: ["poetry", "run", "uvicorn", "source.infraestructure.http_server:app", "--host", "0.0.0.0", "--port", "80"]
     environment:
       - PYTHONUNBUFFERED=1
       - POSTGRES_DB=postgres
@@ -15,8 +15,56 @@ services:
     depends_on:
       - pgdb
     volumes:
-      - ./source:/app/source
+      - ./users/source:/app/source
     restart: always
+
+  url-app:
+    build: ./shortener
+    ports:
+      - 8650:80
+    command: ["poetry", "run", "uvicorn", "source.infraestructure.http_server:app", "--host", "0.0.0.0", "--port", "80"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SECRET=D3AAB54D5ADE7F17D4407BD50FD02648AE563BAA64939E49ED938E675240A709
+      - MONGODB_USER=admin 
+      - MONGODB_PASSWORD=123456
+      - MONGODB_HOST=mongodb/test?authSource=admin
+    depends_on:
+      - pgdb
+    volumes:
+      - ./shortener/source:/app/source
+    #restart: always
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27016:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      
+    volumes:
+     - ./mongo:/data/db
+  mongo-express:
+    image: mongo-express
+    restart: always # fixes MongoNetworkError when mongodb is not ready when mongo-express starts
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
+      - ME_CONFIG_MONGODB_SERVER=mongodb  
+
+  angular:
+    build:
+      context: angular-webapp
+    command: sh -c 'yarn install && yarn run ng serve --host 0.0.0.0 --deployUrl=/ --baseHref=/'
+    ports:
+      - "4250:4200"
+    volumes:
+       - ./angular-webapp:/usr/src/app
+    depends_on:
+      - url-app
 
   pgdb:
     image: postgres

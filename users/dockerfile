@@ -14,5 +14,6 @@ WORKDIR /app/
 
 RUN mkdir -p /source
 
+RUN poetry update
 RUN poetry install --no-root
 

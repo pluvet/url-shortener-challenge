@@ -10,5 +10,8 @@ class RegisterUserService():
 
     async def execute(self, email: str, password: str) -> int:
         
-        new_user = User(email=email, password=password)
+        new_user = User(
+            email=email,
+            password=password
+        )
         return await self.user_repo.save(user=new_user)

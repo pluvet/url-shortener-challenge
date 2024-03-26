@@ -1,38 +1,47 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from source.services.register_user import RegisterUserService
-from source.services.login_user import LoginUserService
-from source.adapters.repositories.user.postgres import PostgresUserRepository
+from pydantic import BaseModel, HttpUrl, Field
+from source.application.create_shortened_url import CreateShortenedUrlService
+from source.adapters.controllers.middleware import BearerTokenAuthBackend
+from source.application.redirect_url import RedirectUrlService
+from source.adapters.repositories.url.mongo import UrlMongoRepository
 
-user_router = APIRouter()
 
-@user_router.post('/register')
-async def register(request: Request)-> JSONResponse:
-    """this function register a new user"""
-    request = await request.json()
+url_router = APIRouter()
 
-    user_repository = PostgresUserRepository()
-    register_user_service = RegisterUserService(user_repository)
+class CreateUrlInputDTO(BaseModel):
+    long_url: HttpUrl
+    
+class CreateUrlOutputDTO(BaseModel):
+    short_url: str
 
-    user_id = await register_user_service.execute(
-        email=request["email"],
-        password=request["password"],
+@url_router.post('')
+async def create(data: CreateUrlInputDTO, user_id = Depends(BearerTokenAuthBackend()))-> JSONResponse:
+    """this function creates a new url"""
+
+    url_repository = UrlMongoRepository()
+    create_shortened_url_service = CreateShortenedUrlService(url_repository)
+
+    short_url = await create_shortened_url_service.execute(
+        user_id=user_id,
+        long_url=data.long_url,
     )
 
-    return JSONResponse({"user_id": user_id}, status_code=201)
+    return CreateUrlOutputDTO(short_url=short_url)
 
-@user_router.post('/login')
-async def login(request: Request)-> JSONResponse:
-    """this function login"""
-    request = await request.json()
 
-    user_repository = PostgresUserRepository()
-    login_user_service = LoginUserService(user_repository)
+class RedirectUrlOutputDTO(BaseModel):
+    long_url: str
 
-    token = await login_user_service.execute(
-        email=request["email"],
-        password=request["password"],
+@url_router.get('/redirect/{key}')
+async def redirect(key: int)-> JSONResponse:
+    """this function redirects a short url"""
+
+    url_repository = UrlMongoRepository()
+    login_user_service = RedirectUrlService(url_repository)
+
+    long_url = await login_user_service.execute(
+        key=key
     )
 
-    return JSONResponse({"token": token}, status_code=200)
-
+    return RedirectUrlOutputDTO(long_url=long_url)

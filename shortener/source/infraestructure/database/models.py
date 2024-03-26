@@ -6,9 +6,10 @@ from sqlalchemy import (
 
 from source.infraestructure.database.postgres import Base
 
-class User(Base):
-    __tablename__ = "users"
+class Url(Base):
+    __tablename__ = "urls"
     
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), nullable=False, unique=True, index=True)
-    password = Column(String(255), nullable=False)
+    key = Column(String(6), primary_key=True, index=True)
+    user_id = Column(Integer, index=True)
+    long_url = Column(String(255), nullable=False)
+    visits = Column(Integer)

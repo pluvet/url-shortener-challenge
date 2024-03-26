@@ -1,0 +1,3 @@
+FROM node:16.9 AS dev
+RUN apt-get update && apt-get install -y chromium
+WORKDIR /usr/src/app
