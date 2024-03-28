@@ -7,7 +7,7 @@ class UrlRepository(ABC):
     async def save(self, url: Url) -> None:
         raise NotImplementedError
     @abstractmethod
-    async def find(self, key: str) -> Url:
+    async def find(self, key: str) -> Url | None:
         raise NotImplementedError
     @abstractmethod
     async def list_by_user_id(self, user_id: str) -> list[Url]:

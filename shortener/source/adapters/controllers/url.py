@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, AnyUrl, Field
 from source.domain.url import Url
@@ -8,6 +8,7 @@ from source.adapters.controllers.middleware import BearerTokenAuthBackend
 from source.application.redirect_url import RedirectUrlService
 from source.adapters.repositories.url.mongo import UrlMongoRepository
 from source.infraestructure.env import short_url
+from source.application import exceptions
 
 
 url_router = APIRouter()
@@ -59,8 +60,11 @@ async def redirect(key: str)-> JSONResponse:
     url_repository = UrlMongoRepository()
     login_user_service = RedirectUrlService(url_repository)
 
-    long_url = await login_user_service.execute(
-        key=key
-    )
+    try:
+        long_url = await login_user_service.execute(
+            key=key
+        )
+    except exceptions.NotFound:
+        raise HTTPException(404, detail="Url not found")
 
     return RedirectUrlOutputDTO(long_url=long_url)

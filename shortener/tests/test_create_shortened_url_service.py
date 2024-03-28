@@ -8,6 +8,6 @@ async def test_new_url():
     fake_repo = FakeUrlRepository()
     service = CreateShortenedUrlService(url_repo=fake_repo)
     
-    url_key = service.execute(user_id=1, long_url="www.long_url.com")
+    url_key = await service.execute(user_id=1, long_url="www.long_url.com", short_url="localhost")
     
     assert url_key

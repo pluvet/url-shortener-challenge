@@ -2,7 +2,8 @@ from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 
-JWT_SECRET = "D3AAB54D5ADE7F17D4407BD50FD02648AE563BAA64939E49ED938E675240A709"
+from source.infraestructure.env import jwt_secret
+
 class BearerTokenAuthBackend(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(BearerTokenAuthBackend, self).__init__(auto_error=auto_error)
@@ -19,8 +20,8 @@ class BearerTokenAuthBackend(HTTPBearer):
                 raise HTTPException(status_code=403, detail="Invalid token or expired token.")
             return validated_jwt.get("user_id")
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization token.")
+            raise HTTPException(status_code=403, detail="Credentials not found.")
         
     def verify_jwt(self, jwtoken: str) -> dict:
-        decoded_token = jwt.decode(jwtoken, JWT_SECRET, algorithms=["HS256"])
+        decoded_token = jwt.decode(jwtoken, jwt_secret, algorithms=["HS256"])
         return decoded_token        

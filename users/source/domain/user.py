@@ -13,9 +13,7 @@ class User(BaseModel):
         if not self.id:
             self.password = sha256(self.password.encode()).hexdigest()
         
-    def login(self, password: str) -> jwt:
+    def login(self, password: str) -> str | None:
         if self.password != sha256(password.encode()).hexdigest():
-            print(self.password)
-            print(sha256(password.encode()).hexdigest())
             return None
         return jwt.encode({"user_id": self.id}, secret, algorithm="HS256")

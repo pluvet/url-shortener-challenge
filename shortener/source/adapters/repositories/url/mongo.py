@@ -54,7 +54,7 @@ class UrlMongoRepository(UrlRepository):
             }}
         )
         
-    async def find(self, key: str) -> Url:
+    async def find(self, key: str) -> Url | None:
 
         url = await self.collection.find_one({"_id":key})
         

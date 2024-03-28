@@ -8,6 +8,6 @@ async def test_new_url():
     fake_repo = FakeUrlRepository()
     service = RedirectUrlService(url_repo=fake_repo)
     
-    url_key = service.execute(key="TEST1")
+    long_url = await service.execute(key="TEST1")
     
-    assert url_key
+    assert isinstance(long_url,str)

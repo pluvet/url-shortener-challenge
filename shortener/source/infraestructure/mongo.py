@@ -1,9 +1,8 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from source.infraestructure.env import user, password,host
 
-uri = f'mongodb://{user}:{password}@{host}'
-url = 'mongodb://admin:123456@mongodb:27017'
-conn = AsyncIOMotorClient(url)
+from source.infraestructure.env import mongo_url
+
+conn = AsyncIOMotorClient(mongo_url)
 
 default_db = conn.backend
 

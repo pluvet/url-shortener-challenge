@@ -18,9 +18,13 @@ class PostgresUserRepository:
             db.rollback()
         return new_user.id
     
-    async def find_by_email(self, email: str) -> User:
+    async def find_by_email(self, email: str) -> User | None:
 
         user = db.query(models.User).filter(models.User.email == email).first()
+
+        if user is None:
+            return None
+        
         return User(
             id=user.id,
             email=user.email,

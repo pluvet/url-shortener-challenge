@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException
 import jwt
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 from source.application.register_user import RegisterUserService
 from source.application.login_user import LoginUserService
 from source.adapters.repositories.user.postgres import PostgresUserRepository
+from source.application.exceptions import InvalidEmailOrPassword
 
 user_router = APIRouter()
 
@@ -33,6 +34,9 @@ class LoginUserInputDTO (BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=20)
 
+class LoginUserOutputDTO (BaseModel):
+    token: str
+
 @user_router.post('/login')
 async def login(data: LoginUserInputDTO)-> JSONResponse:
     """this function login"""
@@ -40,10 +44,12 @@ async def login(data: LoginUserInputDTO)-> JSONResponse:
     user_repository = PostgresUserRepository()
     login_user_service = LoginUserService(user_repository)
 
-    token = await login_user_service.execute(
-        email=data.email,
-        password=data.password,
-    )
-    print(token)
+    try:
+        token = await login_user_service.execute(
+            email=data.email,
+            password=data.password,
+        )
+    except InvalidEmailOrPassword:
+        raise HTTPException(404, detail="Incorrect Email or Password")
 
-    return JSONResponse({"token": token}, status_code=200)
+    return LoginUserOutputDTO(token=token)

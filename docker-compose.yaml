@@ -26,9 +26,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - SECRET=D3AAB54D5ADE7F17D4407BD50FD02648AE563BAA64939E49ED938E675240A709
-      - MONGODB_USER=admin 
-      - MONGODB_PASSWORD=123456
-      - MONGODB_HOST=mongodb/test?authSource=admin
+      - MONGODB_URL=mongodb://admin:123456@mongodb:27017
       - SHORT_URL=localhost:4250
     depends_on:
       - mongodb
