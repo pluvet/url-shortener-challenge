@@ -44,5 +44,6 @@ async def login(data: LoginUserInputDTO)-> JSONResponse:
         email=data.email,
         password=data.password,
     )
+    print(token)
 
     return JSONResponse({"token": token}, status_code=200)

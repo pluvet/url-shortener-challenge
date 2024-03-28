@@ -21,4 +21,8 @@ class PostgresUserRepository:
     async def find_by_email(self, email: str) -> User:
 
         user = db.query(models.User).filter(models.User.email == email).first()
-        return user
+        return User(
+            id=user.id,
+            email=user.email,
+            password=user.password
+        )

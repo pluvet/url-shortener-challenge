@@ -10,5 +10,5 @@ class RedirectUrlService():
     async def execute(self, key: str) -> str:
         url = await self.url_repo.find(key)
         url.new_visit()
-        await self.url_repo.save(url)
+        await self.url_repo.update(url)
         return url.long_url

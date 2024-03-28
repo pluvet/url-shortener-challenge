@@ -8,11 +8,14 @@ class User(BaseModel):
     email: EmailStr
     password: str
     
-    def __init__(self, email: EmailStr, password: str):
-        self.email = email
-        self.password = sha256(password.encode()).hexdigest()
+    def __init__(self, **data):
+        super().__init__(**data)
+        if not self.id:
+            self.password = sha256(self.password.encode()).hexdigest()
         
     def login(self, password: str) -> jwt:
         if self.password != sha256(password.encode()).hexdigest():
+            print(self.password)
+            print(sha256(password.encode()).hexdigest())
             return None
         return jwt.encode({"user_id": self.id}, secret, algorithm="HS256")

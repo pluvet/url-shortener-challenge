@@ -11,24 +11,13 @@ export class AppComponent implements DoCheck {
   isadmin=false;
   isMenuVisible=false;
   constructor(private route:Router){
-    let role=sessionStorage.getItem('role');
-    if(role=='admin'){
-      this.isadmin=true;
-    }
   }
   ngDoCheck(): void {
     let currentroute = this.route.url;
-    let role=sessionStorage.getItem('role');
-    if (currentroute == '/login' || currentroute == '/register') {
+    if (currentroute == '/login' || currentroute == '/register' || currentroute == ':key') {
       this.isMenuVisible = false
     } else {
       this.isMenuVisible = true
-    }
-
-    if (role == 'admin') {
-      this.isadmin = true;
-    }else{
-      this.isadmin = false;
     }
   }
 }

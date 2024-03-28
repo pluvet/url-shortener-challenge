@@ -29,11 +29,12 @@ services:
       - MONGODB_USER=admin 
       - MONGODB_PASSWORD=123456
       - MONGODB_HOST=mongodb/test?authSource=admin
+      - SHORT_URL=localhost:4250
     depends_on:
-      - pgdb
+      - mongodb
     volumes:
       - ./shortener/source:/app/source
-    #restart: always
+    restart: always
 
   mongodb:
     image: mongo
@@ -58,13 +59,14 @@ services:
   angular:
     build:
       context: angular-webapp
-    command: sh -c 'yarn install && yarn run ng serve --host 0.0.0.0 --deployUrl=/ --baseHref=/'
+    command: sh -c 'yarn install && yarn run ng serve --host 0.0.0.0'
     ports:
       - "4250:4200"
     volumes:
        - ./angular-webapp:/usr/src/app
     depends_on:
       - url-app
+    restart: always
 
   pgdb:
     image: postgres

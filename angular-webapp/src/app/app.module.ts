@@ -7,13 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { UserComponent } from './user/user.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from 'src/material.module';
 import {HttpClientModule} from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-import { UpdatepopupComponent } from './updatepopup/updatepopup.component';
-import { CustomerComponent } from './customer/customer.component';
+import { UrlComponent } from './url/url.component';
+import { AddUrlModalComponent } from './add-url-modal/add-url-modal.component';
+import { RedirectComponent } from './redirect/redirect.component';
 
 @NgModule({
   declarations: [
@@ -21,9 +21,9 @@ import { CustomerComponent } from './customer/customer.component';
     RegisterComponent,
     LoginComponent,
     HomeComponent,
-    UserComponent,
-    UpdatepopupComponent,
-    CustomerComponent
+    AddUrlModalComponent,
+    UrlComponent,
+    RedirectComponent
   ],
   imports: [
     BrowserModule,

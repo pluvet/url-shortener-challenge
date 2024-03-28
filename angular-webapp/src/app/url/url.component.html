@@ -1,0 +1,47 @@
+<mat-card>
+    <mat-card-header>
+        <h2>Url Listing</h2>
+       
+       
+    </mat-card-header>
+    <mat-card-content>
+        <div class="mat-elevation-z8">
+            <button (click)="addUrl()" mat-raised-button color="primary">Add Url</button>
+            <table mat-table matSort  [dataSource]="dataSource">
+          
+              <!-- Position Column -->
+              <ng-container matColumnDef="key">
+                <th mat-header-cell *matHeaderCellDef> Key </th>
+                <td mat-cell *matCellDef="let element"> {{element.key}} </td>
+              </ng-container>
+          
+              <!-- Name Column -->
+              <ng-container  matColumnDef="long_url">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef> Long Url </th>
+                <td mat-cell *matCellDef="let element"> {{element.long_url}} </td>
+              </ng-container>
+          
+              <!-- Weight Column -->
+              <ng-container matColumnDef="short_url">
+                <th mat-header-cell *matHeaderCellDef> Short Url </th>
+                <td mat-cell *matCellDef="let element"> {{element.short_url}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="visits">
+                <th mat-header-cell *matHeaderCellDef> Visits </th>
+                <td mat-cell *matCellDef="let element"> {{element.visits}} </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                           showFirstLastButtons
+                           aria-label="Select page of periodic elements">
+            </mat-paginator>
+          </div>
+    </mat-card-content>
+  </mat-card>
+
+

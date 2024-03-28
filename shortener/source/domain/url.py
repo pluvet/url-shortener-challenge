@@ -2,8 +2,8 @@ from pydantic import BaseModel
 import shortuuid
 
 class Url(BaseModel):
-    key: str | None
-    user_id: str
+    key: str | None = None
+    user_id: int
     long_url: str
     short_url: str
     visits: int = 0
@@ -12,7 +12,7 @@ class Url(BaseModel):
         super(Url, self).__init__(**data)
         if not self.key:
             self.key = self.__generate_short_url()
-            short_url = short_url + self.key
+            self.short_url = self.short_url + '/' + self.key
 
     def __generate_short_url(self) -> str:
         return shortuuid.ShortUUID().random(length=6)

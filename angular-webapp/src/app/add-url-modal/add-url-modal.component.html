@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Create Url</h1>
+<form [formGroup]="urlform" (ngSubmit)="OnSave()">
+    <div mat-dialog-content>
+
+        <mat-form-field class="example-full-width">
+            <mat-label>Long Url</mat-label>
+            <input type="long_url" matInput formControlName="long_url" >
+        </mat-form-field>
+
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" mat-raised-button color="primary" cdkFocusInitial>Save</button>
+        <button mat-raised-button color="warn" mat-dialog-close>Close</button>
+    </div>
+</form>

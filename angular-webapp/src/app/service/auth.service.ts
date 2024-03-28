@@ -1,5 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, retry} from 'rxjs';
+import { RedirectResponse } from '../model/url';
+
+export interface HeadersObject {
+  headers: HttpHeaders;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,33 +16,37 @@ export class AuthService {
   constructor(private http:HttpClient) { 
 
   }
-  apiurl='http://localhost:3000/user';
+  apiurl='http://localhost:8620/users';
 
   RegisterUser(inputdata:any){
-    return this.http.post(this.apiurl,inputdata)
+    return this.http.post(this.apiurl + '/register',inputdata)
   }
-  GetUserbyCode(id:any){
-    return this.http.get(this.apiurl+'/'+id);
-  }
-  Getall(){
-    return this.http.get(this.apiurl);
-  }
-  updateuser(id:any,inputdata:any){
-    return this.http.put(this.apiurl+'/'+id,inputdata);
-  }
-  getuserrole(){
-    return this.http.get('http://localhost:3000/role');
+  Login(inputdata:any){
+    return this.http.post(this.apiurl + '/login',inputdata)
   }
   isloggedin(){
-    return sessionStorage.getItem('username')!=null;
+    return sessionStorage.getItem('token')!=null;
   }
-  getrole(){
-    return sessionStorage.getItem('role')!=null?sessionStorage.getItem('role')?.toString():'';
+  getAuthenticatedHeaders(httpAccept: string = 'application/json'): HeadersObject {
+    const token = sessionStorage.getItem('token')
+    return {
+        headers: new HttpHeaders({ Authorization: `Bearer ${token}`, accept: httpAccept })
+    };
   }
-  GetAllCustomer(){
-    return this.http.get('http://localhost:3000/customer');
+  GetAllUrl(){
+    return this.http.get('http://localhost:8650/urls', this.getAuthenticatedHeaders());
   }
-  Getaccessbyrole(role:any,menu:any){
-    return this.http.get('http://localhost:3000/roleaccess?role='+role+'&menu='+menu)
+
+  Redirect(key:string): Observable<RedirectResponse>{
+    const urlApi = 'http://localhost:8650/urls/redirect/'+key
+    return this.http
+    .get<RedirectResponse>(urlApi)
+    .pipe(
+      retry(1)
+    )
+  }
+
+  CreateUrl(inputdata:any){
+    return this.http.post('http://localhost:8650/urls', inputdata,this.getAuthenticatedHeaders());
   }
 }
