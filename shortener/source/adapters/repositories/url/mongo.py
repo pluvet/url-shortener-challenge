@@ -68,4 +68,3 @@ class UrlMongoRepository(UrlRepository):
             short_url = url["short_url"],
             visits = url["visits"]
         )
-        

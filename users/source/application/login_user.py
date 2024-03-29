@@ -2,11 +2,15 @@ from dataclasses import dataclass
 import jwt
 
 from source.ports.user_repository import UserRepository
+from source.ports.password_encrypter import HashPasswordEncrypter
+from source.ports.token_generator import TokenGenerator
 from source.application.exceptions import InvalidEmailOrPassword
 
 @dataclass
 class LoginUserService():
     user_repo: UserRepository
+    password_encrypter: HashPasswordEncrypter
+    token_generator: TokenGenerator
 
     async def execute(self, email: str, password: str) -> str:
         
@@ -14,10 +18,12 @@ class LoginUserService():
 
         if user is None:
             raise InvalidEmailOrPassword(f'Incorrect Email')
+        
+        encrypted_password = self.password_encrypter.execute(password)
 
-        token = user.login(password=password)
+        login = user.login(password=encrypted_password)
 
-        if token is None:
+        if not login:
             raise InvalidEmailOrPassword(f'Incorret Password')
 
-        return token
+        return self.token_generator.execute(user.id)

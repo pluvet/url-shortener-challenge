@@ -41,10 +41,13 @@ export class UrlComponent implements OnInit {
   displayedColumns: string[] = ['key', 'long_url', 'short_url', 'visits'];
 
   addUrl() {
-    this.dialog.open(AddUrlModalComponent, {
+    const dialogRef = this.dialog.open(AddUrlModalComponent, {
       width: '450px'
     });
 
+    dialogRef.afterClosed().subscribe(() => {
+      this.LoadUrl();
+    });
     
   }
 

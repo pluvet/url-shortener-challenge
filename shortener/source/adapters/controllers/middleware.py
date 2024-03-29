@@ -9,7 +9,6 @@ class BearerTokenAuthBackend(HTTPBearer):
         super(BearerTokenAuthBackend, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-        # do something with the request object, for example
         credentials: HTTPAuthorizationCredentials = await super(BearerTokenAuthBackend, self).__call__(request)
         if credentials:
             

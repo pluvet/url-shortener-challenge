@@ -14,10 +14,10 @@ export class AppComponent implements DoCheck {
   }
   ngDoCheck(): void {
     let currentroute = this.route.url;
-    if (currentroute == '/login' || currentroute == '/register' || currentroute == ':key') {
-      this.isMenuVisible = false
-    } else {
+    if (currentroute == '/home' || currentroute == '/url') {
       this.isMenuVisible = true
+    } else {
+      this.isMenuVisible = false
     }
   }
 }
